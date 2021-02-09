@@ -84,6 +84,27 @@ app.post("/registration",(req:any,res:any)=>{
         }
     });
 });
+
+app.post("/signin",(req:any,res:any)=>{
+    mernClient.connect(`mongodb://adminuttam:MongoAdminOfUttam@uttam-rai-shard-00-00.g5lpg.mongodb.net:27017,uttam-rai-shard-00-01.g5lpg.mongodb.net:27017,uttam-rai-shard-00-02.g5lpg.mongodb.net:27017/test?authSource=admin&replicaSet=atlas-zb1b3s-shard-0&w=majority&readPreference=primary&retryWrites=true&ssl=true`,
+    (err:any,conn:any)=>{
+        if(err) throw err;
+        else{
+            let db=conn.db("mern");
+            db.collection("registration").find({"email":req.body.email,"upwd":req.body.upwd}).toArray((err:any,
+                array:any)=>{
+                    if(err) throw err;
+                    else{
+                        if(array.length>0){
+                            res.send({login:"success"});
+                        }else{
+                            res.send({login:"fail"});
+                        }
+                    }
+                });
+        }
+    });
+});
 // port 
 
 let port:any = process.env.port || 8080;
